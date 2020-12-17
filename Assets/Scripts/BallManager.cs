@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -43,7 +44,7 @@ public class BallManager : MonoBehaviour
 
 	private Color getRandomColor()
 	{
-		var colorIndex = Random.Range(0, 3);
+		var colorIndex = UnityEngine.Random.Range(0, 3);
 		Color color = Color.white;
 
 		switch (colorIndex)
@@ -64,7 +65,7 @@ public class BallManager : MonoBehaviour
 
 	private int getRandomIntensity()
 	{
-		return Random.Range(0, 256);
+		return UnityEngine.Random.Range(0, 256);
 	}
 
 	private void regroupBalls()
@@ -92,9 +93,10 @@ public class BallManager : MonoBehaviour
 
 	private void sortBalls()
 	{
-		HeapSort.SortListByIndex(redBalls);
-		HeapSort.SortListByIndex(greenBalls);
-		HeapSort.SortListByIndex(blueBalls);
+		Func<Ball, int> compareIndex = (ball) => ball.Index;
+		HeapSort.SortBalls(redBalls, compareIndex);
+		HeapSort.SortBalls(greenBalls, compareIndex);
+		HeapSort.SortBalls(blueBalls, compareIndex);
 	}
 
 	private void mergeBalls()
@@ -115,14 +117,21 @@ public class BallManager : MonoBehaviour
 
 	private void createSpiral()
 	{
+		sortMergedBalls();
 		SpiralUtils.Create(0, 0, 10, 5, 100, 1f, spawnBall, MergeAmount);
 	}
 
-	void spawnBall(int iteration, float x, float y)
+	private void spawnBall(int iteration, float x, float y)
 	{
 		Vector3 position = new Vector3(x, 0, y);
 		var newBallGameObject = Instantiate(BallPrefab, position, Quaternion.identity);
 		var ball = mergedBalls[iteration];
 		newBallGameObject.GetComponent<Renderer>().material.SetColor("_Color", ball.Color);
+	}
+
+	private void sortMergedBalls()
+	{
+		Func<Ball, int> compareScore = (ball) => ball.Score;
+		HeapSort.SortBalls(mergedBalls, compareScore);
 	}
 }
