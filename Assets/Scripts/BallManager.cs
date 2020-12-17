@@ -5,6 +5,8 @@ using UnityEngine;
 public class BallManager : MonoBehaviour
 {
 	public int BallAmount = 3000;
+	public int MergeAmount = 100;
+	private List<Ball> mergedBalls;
 	private List<Ball> balls;
 	private List<Ball> redBalls;
 	private List<Ball> greenBalls;
@@ -16,6 +18,7 @@ public class BallManager : MonoBehaviour
 		createBalls();
 		regroupBalls();
 		sortBalls();
+		mergeBalls();
 	}
 
 	private void createBalls()
@@ -90,5 +93,21 @@ public class BallManager : MonoBehaviour
 		HeapSort.SortListByIndex(redBalls);
 		HeapSort.SortListByIndex(greenBalls);
 		HeapSort.SortListByIndex(blueBalls);
+	}
+
+	private void mergeBalls()
+	{
+		mergedBalls = new List<Ball>();
+		for (int i = 0; i < MergeAmount; i++)
+		{
+			int rValue = redBalls[i].Intensity;
+			int gValue = greenBalls[i].Intensity;
+			int bValue = blueBalls[i].Intensity;
+
+			int intensityScore = rValue + gValue + bValue;
+			Color color = new Color(rValue, gValue, bValue);
+			Ball ball = new Ball(0, intensityScore, color);
+			mergedBalls.Add(ball);
+		}
 	}
 }
