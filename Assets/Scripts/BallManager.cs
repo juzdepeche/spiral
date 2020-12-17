@@ -6,11 +6,15 @@ public class BallManager : MonoBehaviour
 {
 	public int BallAmount = 3000;
 	private List<Ball> balls;
+	private List<Ball> redBalls;
+	private List<Ball> greenBalls;
+	private List<Ball> blueBalls;
 
 	void Start()
 	{
 		balls = new List<Ball>();
 		createBalls();
+		regroupBalls();
 	}
 
 	private void createBalls()
@@ -55,5 +59,28 @@ public class BallManager : MonoBehaviour
 	private int getRandomIntensity()
 	{
 		return Random.Range(0, 256);
+	}
+
+	private void regroupBalls()
+	{
+		redBalls = new List<Ball>();
+		greenBalls = new List<Ball>();
+		blueBalls = new List<Ball>();
+
+		foreach (var ball in balls)
+		{
+			if (ball.Color == Color.red)
+			{
+				redBalls.Add(ball);
+			}
+			else if (ball.Color == Color.green)
+			{
+				greenBalls.Add(ball);
+			}
+			else if (ball.Color == Color.blue)
+			{
+				blueBalls.Add(ball);
+			}
+		}
 	}
 }
