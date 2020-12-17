@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BallManager : MonoBehaviour
 {
+	public GameObject BallPrefab;
 	public int BallAmount = 3000;
 	public int MergeAmount = 100;
 	private List<Ball> mergedBalls;
@@ -19,6 +20,7 @@ public class BallManager : MonoBehaviour
 		regroupBalls();
 		sortBalls();
 		mergeBalls();
+		createSpiral();
 	}
 
 	private void createBalls()
@@ -105,9 +107,22 @@ public class BallManager : MonoBehaviour
 			int bValue = blueBalls[i].Intensity;
 
 			int intensityScore = rValue + gValue + bValue;
-			Color color = new Color(rValue, gValue, bValue);
+			Color color = new Color(rValue / 255f, gValue / 255f, bValue / 255f);
 			Ball ball = new Ball(0, intensityScore, color);
 			mergedBalls.Add(ball);
 		}
+	}
+
+	private void createSpiral()
+	{
+		SpiralUtils.Create(0, 0, 10, 5, 100, 1f, spawnBall, MergeAmount);
+	}
+
+	void spawnBall(int iteration, float x, float y)
+	{
+		Vector3 position = new Vector3(x, 0, y);
+		var newBallGameObject = Instantiate(BallPrefab, position, Quaternion.identity);
+		var ball = mergedBalls[iteration];
+		newBallGameObject.GetComponent<Renderer>().material.SetColor("_Color", ball.Color);
 	}
 }

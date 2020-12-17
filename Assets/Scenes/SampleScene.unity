@@ -328,7 +328,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebf91356a96cf76418d0461266c3feef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BallPrefab: {fileID: 5148163277531087961, guid: 62e44f49db458d64e8b61458cff9be4d, type: 3}
   BallAmount: 1000
+  MergeAmount: 100
 --- !u!4 &1877955492
 Transform:
   m_ObjectHideFlags: 0
