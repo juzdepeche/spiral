@@ -13,6 +13,7 @@ public class BallManager : MonoBehaviour
 	private int BallAmount = 3000;
 	[SerializeField]
 	private int MergeAmount = 100;
+	private List<GameObject> ballObjects;
 	private List<Ball> mergedBalls;
 	private List<Ball> balls;
 	private List<Ball> redBalls;
@@ -139,6 +140,7 @@ public class BallManager : MonoBehaviour
 
 	private void createSpiral()
 	{
+		ballObjects = new List<GameObject>();
 		sortMergedBalls();
 		SpiralUtils.Create(0, 0, 10, 5, 100, 1f, spawnBall, MergeAmount);
 	}
@@ -153,6 +155,21 @@ public class BallManager : MonoBehaviour
 		newBallGameObject.AddComponent<Ball>();
 		newBallGameObject.GetComponent<Ball>().Index = ball.Index;
 		newBallGameObject.GetComponent<Renderer>().material.SetColor("_Color", ball.Color);
+
+		ballObjects.Add(newBallGameObject);
+	}
+
+	private void updateSpiral()
+	{
+		if (ballObjects.Count == 0) return;
+
+		SpiralUtils.Create(0, 0, 10, 5, 100, 1f, moveBall, ballObjects.Count);
+	}
+
+	private void moveBall(int iteration, float x, float y)
+	{
+		Vector3 position = new Vector3(x, 0, y);
+		ballObjects[iteration].transform.localPosition = position;
 	}
 
 	private void sortMergedBalls()
@@ -185,8 +202,12 @@ public class BallManager : MonoBehaviour
 		int index = mergedBalls.FindIndex(b => b.Index == ballIndex);
 		mergedBalls.RemoveAt(index);
 
+		var ballObjectIndex = ballObjects.FindIndex(b => b == ball);
+		ballObjects.RemoveAt(ballObjectIndex);
+
 		Destroy(ball);
 
 		OnScoreChanged?.Invoke();
+		updateSpiral();
 	}
 }
