@@ -15,6 +15,7 @@ public class BallManager : MonoBehaviour
 		balls = new List<Ball>();
 		createBalls();
 		regroupBalls();
+		sortBalls();
 	}
 
 	private void createBalls()
@@ -82,5 +83,12 @@ public class BallManager : MonoBehaviour
 				blueBalls.Add(ball);
 			}
 		}
+	}
+
+	private void sortBalls()
+	{
+		HeapSort.SortListByIndex(redBalls);
+		HeapSort.SortListByIndex(greenBalls);
+		HeapSort.SortListByIndex(blueBalls);
 	}
 }
