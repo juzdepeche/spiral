@@ -18,6 +18,7 @@ public class BallManager : MonoBehaviour
 	private List<Ball> redBalls;
 	private List<Ball> greenBalls;
 	private List<Ball> blueBalls;
+	public static event Action OnScoreChanged;
 
 	private void Awake()
 	{
@@ -35,7 +36,10 @@ public class BallManager : MonoBehaviour
 		OnScoreChanged?.Invoke();
 	}
 
-	public static event Action OnScoreChanged;
+	private void Update()
+	{
+		HandleClick();
+	}
 
 	public int GetTotalScore()
 	{
@@ -141,9 +145,13 @@ public class BallManager : MonoBehaviour
 
 	private void spawnBall(int iteration, float x, float y)
 	{
+		var ball = mergedBalls[iteration];
+
 		Vector3 position = new Vector3(x, 0, y);
 		var newBallGameObject = Instantiate(BallPrefab, position, Quaternion.identity);
-		var ball = mergedBalls[iteration];
+
+		newBallGameObject.AddComponent<Ball>();
+		newBallGameObject.GetComponent<Ball>().Index = ball.Index;
 		newBallGameObject.GetComponent<Renderer>().material.SetColor("_Color", ball.Color);
 	}
 
@@ -151,5 +159,34 @@ public class BallManager : MonoBehaviour
 	{
 		Func<Ball, int> compareScore = (ball) => ball.Score;
 		HeapSort.SortBalls(mergedBalls, compareScore);
+	}
+
+	private void HandleClick()
+	{
+		if (Input.GetMouseButtonDown(0))
+		{
+			RaycastHit hit;
+			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+			if (Physics.Raycast(ray, out hit))
+			{
+				SphereCollider sc = hit.collider as SphereCollider;
+				if (sc != null)
+				{
+					OnBallClicked(sc.gameObject);
+				}
+			}
+		}
+	}
+
+	private void OnBallClicked(GameObject ball)
+	{
+		var ballIndex = ball.GetComponent<Ball>().Index;
+		int index = mergedBalls.FindIndex(b => b.Index == ballIndex);
+		mergedBalls.RemoveAt(index);
+
+		Destroy(ball);
+
+		OnScoreChanged?.Invoke();
 	}
 }

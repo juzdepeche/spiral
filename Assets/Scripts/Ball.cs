@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ball
+public class Ball : MonoBehaviour
 {
-	public int Index { get; private set; }
+	public int Index { get; set; }
 	public Color Color { get; private set; }
 	public int Intensity { get; private set; }
 	public int Score { get; private set; }
