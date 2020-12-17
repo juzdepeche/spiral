@@ -1,18 +1,28 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BallManager : MonoBehaviour
 {
-	public GameObject BallPrefab;
-	public int BallAmount = 3000;
-	public int MergeAmount = 100;
+	public static BallManager Instance;
+	[SerializeField]
+	private GameObject BallPrefab;
+	[SerializeField]
+	private int BallAmount = 3000;
+	[SerializeField]
+	private int MergeAmount = 100;
 	private List<Ball> mergedBalls;
 	private List<Ball> balls;
 	private List<Ball> redBalls;
 	private List<Ball> greenBalls;
 	private List<Ball> blueBalls;
+
+	private void Awake()
+	{
+		Instance = this;
+	}
 
 	void Start()
 	{
@@ -22,6 +32,14 @@ public class BallManager : MonoBehaviour
 		sortBalls();
 		mergeBalls();
 		createSpiral();
+		OnScoreChanged?.Invoke();
+	}
+
+	public static event Action OnScoreChanged;
+
+	public int GetTotalScore()
+	{
+		return mergedBalls.Sum(b => b.Score);
 	}
 
 	private void createBalls()
