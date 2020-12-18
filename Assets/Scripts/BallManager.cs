@@ -152,8 +152,7 @@ public class BallManager : MonoBehaviour
 		Vector3 position = new Vector3(x, 0, y);
 		var newBallGameObject = Instantiate(BallPrefab, position, Quaternion.identity);
 
-		newBallGameObject.AddComponent<Ball>();
-		newBallGameObject.GetComponent<Ball>().Index = ball.Index;
+		newBallGameObject.GetComponent<BallObject>().Index = ball.Index;
 		newBallGameObject.GetComponent<Renderer>().material.SetColor("_Color", ball.Color);
 
 		ballObjects.Add(newBallGameObject);
@@ -199,7 +198,7 @@ public class BallManager : MonoBehaviour
 
 	private void OnBallClicked(GameObject ball)
 	{
-		var ballIndex = ball.GetComponent<Ball>().Index;
+		var ballIndex = ball.GetComponent<BallObject>().Index;
 		int index = mergedBalls.FindIndex(b => b.Index == ballIndex);
 		mergedBalls.RemoveAt(index);
 
