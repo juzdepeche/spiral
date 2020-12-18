@@ -176,6 +176,7 @@ public class BallManager : MonoBehaviour
 	{
 		Func<Ball, int> compareScore = (ball) => ball.Score;
 		HeapSort.SortBalls(mergedBalls, compareScore);
+		mergedBalls.Reverse();
 	}
 
 	private void HandleClick()
