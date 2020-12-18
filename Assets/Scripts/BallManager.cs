@@ -131,9 +131,9 @@ public class BallManager : MonoBehaviour
 			int gValue = greenBalls[i].Intensity;
 			int bValue = blueBalls[i].Intensity;
 
-			int intensityScore = rValue + gValue + bValue;
+			int score = redBalls[i].Index + greenBalls[i].Index + blueBalls[i].Index;
 			Color color = new Color(rValue / 255f, gValue / 255f, bValue / 255f);
-			Ball ball = new Ball(0, intensityScore, color);
+			Ball ball = new Ball(0, score, color);
 			mergedBalls.Add(ball);
 		}
 	}
